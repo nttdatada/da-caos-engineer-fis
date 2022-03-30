@@ -13,7 +13,7 @@ jobs:
   terraform:
     name: Terrafom Stack Stage
     runs-on: ubuntu-latest
-    environment: stage
+    environment: s12
     
     env:
       stack: s12
