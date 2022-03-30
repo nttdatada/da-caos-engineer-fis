@@ -118,7 +118,7 @@ module "asg_ec2_fis" {
     health_check_grace_period   = "60"
     health_check_type           = "ELB"
    
-    load_balancers              = module.elb.elb_id ### Create output ####
+    load_balancers              =  module.elb.elb_id 
     subnets_zones               = [ data.aws_subnet.subnet-c.id , data.aws_subnet.subnet-d.id ]     
     
     # AutoScaling Policy    
@@ -138,7 +138,7 @@ module "asg_ec2_fis" {
     lifecycle_transition        = "autoscaling:EC2_INSTANCE_LAUNCHING"   
     
     # Launch Configuration   
-    ami                          = data.aws_ami.ubuntu.id
+    ami                          = "ami-0563e71b908da045f"
     iam_instance_profile         = module.instance_profile_ec2.instance_profile_name
     instance_type                = "t3.micro"
     disk_size                    = "30"
