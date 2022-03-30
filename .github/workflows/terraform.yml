@@ -1,0 +1,94 @@
+name: Terraform
+
+on:
+  pull_request: 
+    branchs:
+      - master
+
+jobs:
+
+  terraform:
+    name: Terrafom Stack Stage
+    runs-on: ubuntu-latest
+    environment: stage
+    
+    env:
+      stack: stage
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validade
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Workspace Create
+        id: create_workspace
+        run: terraform workspace new ${{ env.stack }}
+        continue-on-error: true
+      
+      - name: Terraform Workspace Select
+        id: select_workspace
+        run: terraform workspace select ${{ env.stack }}
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="environments/$(cat .terraform/environment)/variables.tfvars" -no-color
+        continue-on-error: true 
+      
+      - name: Update Pull Requests
+        uses: actions/github-script@0.9.0
+        with:
+          gitub-token: ${{ secrets.GITHUB_TOKEN }} 
+          script: |
+              const output = `
+              #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+              #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+              #### Terraform Workspace Create 📖\`${{ steps.create_workspace.outcome }}\`
+              #### Terraform Workspace Select 📖\`${{ steps.select_workspace.outcome }}\`
+              #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+              
+        
+              <details><summary>Show Plan</summary>
+        
+              \`\`\`\n
+              ${process.env.PLAN}
+              \`\`\`
+        
+              </details>
+        
+              *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+        
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+      
+      - name: Terraform Apply
+        run: terraform apply -var-file="environments/$(cat .terraform/environment)/variables.tfvars" -auto-approve
+
+  
+
+          
