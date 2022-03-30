@@ -24,3 +24,4 @@ terraform
 .pem
 *.pem
 .fis_cli_result
+fis-*.sh
