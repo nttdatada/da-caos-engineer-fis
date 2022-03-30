@@ -113,8 +113,8 @@ module "asg_ec2_fis" {
     
     # AutoScaling
     asg_name                    = "asg-ec2-fis-${terraform.workspace}"
-    asg_max_size                = "0"
-    asg_min_size                = "0"
+    asg_max_size                = "2"
+    asg_min_size                = "1"
     health_check_grace_period   = "60"
     health_check_type           = "ELB"
    
