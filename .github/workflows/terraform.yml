@@ -4,16 +4,19 @@ on:
   pull_request: 
     branchs:
       - master
+  pull:
+    branchs:
+      - si2
 
 jobs:
 
   terraform:
     name: Terrafom Stack Stage
     runs-on: ubuntu-latest
-    environment: stage
+    environment: s12
     
     env:
-      stack: stage
+      stack: s12
 
     steps:
 
