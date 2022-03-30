@@ -1,0 +1,33 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowFISExperimentRoleSSMReadOnly",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetAutomationExecution",
+                "ssm:ListCommands"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowFISExperimentRoleSSMSendCommand",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:SendCommand"
+            ],
+            "Resource": [
+                "arn:aws:ec2:*:*:instance/*",
+                "arn:aws:ssm:*:*:document/*"
+            ]
+        },
+        {
+            "Sid": "AllowFISExperimentRoleSSMCancelCommand",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:CancelCommand"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
