@@ -1,0 +1,40 @@
+{
+    "description": "GameDay S12 EC2 NetworkLatency",
+
+    "targets": {
+        "ec2-instances": {
+            "resourceType": "aws:ec2:instance",
+            "resourceArns": [
+                "arn:aws:ec2:us-east-1:385007816573:instance/i-0d6e0db97f5edee11"
+            ],
+            "selectionMode": "ALL"
+        }
+    },
+
+    "actions": {
+        "NetworkLatency": {
+            "actionId": "aws:ssm:send-command",
+            "description": "run network latency using ssm",
+            "parameters": {
+                "duration": "PT5M",
+                "documentArn": "arn:aws:ssm:us-east-1::document/AWSFIS-Run-Network-Latency",
+                "documentParameters": "{\"DurationSeconds\": \"300\", \"InstallDependencies\": \"True\", \"DelayMilliseconds\": \"100\"}"
+            },
+            "targets": {
+                "Instances": "ec2-instances"
+            }
+        }
+    },
+
+    "stopConditions":[
+        {
+            "source": "none"
+        }
+    ],
+
+    "roleArn": "arn:aws:iam::385007816573:role/role-fis-si2",
+
+    "tags": {
+        "Name":"gameday-ec2-networklatency-si2"
+    }
+}
