@@ -13,10 +13,10 @@ jobs:
   terraform:
     name: Terrafom Stack Stage
     runs-on: ubuntu-latest
-    environment: s12
+    environment: si2
     
     env:
-      stack: s12
+      stack: si2
 
     steps:
 
