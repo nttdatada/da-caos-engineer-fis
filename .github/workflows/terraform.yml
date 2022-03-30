@@ -55,36 +55,6 @@ jobs:
         run: terraform plan -var-file="environments/$(cat .terraform/environment)/variables.tfvars" -no-color
         continue-on-error: true 
       
-      - name: Update Pull Requests
-        uses: actions/github-script@0.9.0
-        with:
-          gitub-token: ${{ secrets.GITHUB_TOKEN }} 
-          script: |
-              const output = `
-              #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-              #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-              #### Terraform Workspace Create 📖\`${{ steps.create_workspace.outcome }}\`
-              #### Terraform Workspace Select 📖\`${{ steps.select_workspace.outcome }}\`
-              #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-              
-        
-              <details><summary>Show Plan</summary>
-        
-              \`\`\`\n
-              ${process.env.PLAN}
-              \`\`\`
-        
-              </details>
-        
-              *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-        
-              github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: output
-              })
-
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
