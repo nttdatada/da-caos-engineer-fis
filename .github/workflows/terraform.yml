@@ -63,7 +63,9 @@ jobs:
   terraform-apply:
     name: Terrafom Apply
     runs-on: ubuntu-latest
-    environment: si2
+    environment: 
+      name: approval
+      url: 'http://myapp.com'
     needs: terraform-plan
     
     env:
@@ -71,14 +73,6 @@ jobs:
       
 
     steps:
-
-      - name: label_step
-        uses: pullreminders/label-when-approved-action
-        env:
-          APPROVALS: 1
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ADD_LABEL: "Label"
-
 
       - name: Checkout
         uses: actions/checkout@v2
