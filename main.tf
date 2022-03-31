@@ -138,7 +138,7 @@ module "asg_ec2_fis" {
     lifecycle_transition        = "autoscaling:EC2_INSTANCE_LAUNCHING"   
     
     # Launch Configuration   
-    ami                          = "ami-0563e71b908da045f"
+    ami                          = "ami-06381837f92855d99"
     iam_instance_profile         = module.instance_profile_ec2.instance_profile_name
     instance_type                = "t3.micro"
     disk_size                    = "30"
