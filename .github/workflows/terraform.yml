@@ -63,13 +63,22 @@ jobs:
   terraform-apply:
     name: Terrafom Apply
     runs-on: ubuntu-latest
-    environment: si2 approval
+    environment: si2
     needs: terraform-plan
     
     env:
       stack: si2
+      
 
     steps:
+
+      - name: label_step
+      - uses: pullreminders/label-when-approved-action
+        env:
+          APPROVALS: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADD_LABEL: "Label"
+
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -83,6 +92,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION}}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        
       
       - name: Terraform Init
         id: init
