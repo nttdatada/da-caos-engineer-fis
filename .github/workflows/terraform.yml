@@ -1,4 +1,4 @@
-name: Terraform
+name: Terraform Stack
 
 on:
   pull_request: 
@@ -10,8 +10,8 @@ on:
 
 jobs:
 
-  terraform:
-    name: Terrafom Stack Stage
+  terraform-plan:
+    name: Terrafom Plan
     runs-on: ubuntu-latest
     environment: si2
     
@@ -59,6 +59,47 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
       
+
+  terraform-apply:
+    name: Terrafom Apply
+    runs-on: ubuntu-latest
+    environment: si2 approval
+    
+    env:
+      stack: si2
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validade
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Workspace Create
+        id: create_workspace
+        run: terraform workspace new ${{ env.stack }}
+        continue-on-error: true
+      
+      - name: Terraform Workspace Select
+        id: select_workspace
+        run: terraform workspace select ${{ env.stack }}
+
       - name: Terraform Apply
         run: terraform apply -var-file="environments/$(cat .terraform/environment)/variables.tfvars" -auto-approve
 
