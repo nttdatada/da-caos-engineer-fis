@@ -49,3 +49,11 @@ output "security_group_id_ec2" {
   value = module.sg_ec2.security_group_id
 }
 
+### AWS ELB ###
+
+output "elb_id" {
+
+  description = ""
+  value = module.elb.elb_id
+  
+}
