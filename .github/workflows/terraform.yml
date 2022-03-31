@@ -64,6 +64,7 @@ jobs:
     name: Terrafom Apply
     runs-on: ubuntu-latest
     environment: si2 approval
+    needs: terraform-plan
     
     env:
       stack: si2
