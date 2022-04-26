@@ -32,6 +32,7 @@ variable "experiment_template" {
       DurationSeconds     = number
       Delay               = number
       description         = string
+      interface           = string
   }))
 }
 

@@ -118,7 +118,7 @@ module "asg_ec2_fis" {
     health_check_grace_period   = "60"
     health_check_type           = "ELB"
    
-    load_balancers              =  module.elb.elb_id 
+    load_balancers              =  module.elb.elb_id
     subnets_zones               = [ data.aws_subnet.subnet-c.id , data.aws_subnet.subnet-d.id ]     
     
     # AutoScaling Policy    
@@ -268,6 +268,7 @@ resource "local_file" "fis-template" {
             Delay               = each.value["Delay"]
             description         = each.value["description"]
             template_name       = each.value["template_name"]
+            interface           = each.value["interface"]
             role                = module.role_fis.role-arn
 
   })
